@@ -11,11 +11,11 @@ export default new Vuex.Store({
         admin: null,
     },
     getters: {
-        getToken(state) {
-            return state.token
+        token() {
+            return sessionStorage.getItem("token")
         },
-        getAdmin(state) {
-            return state.admin
+        admin() {
+            return JSON.parse(sessionStorage.getItem("admin"))
         }
     },
     mutations: {
@@ -32,9 +32,9 @@ export default new Vuex.Store({
             getAdminInfo().then(
                 res => {
                     if (res.code == 200) {
-                        context.commit('setAdmin', res.data)
+                        context.state.admin = res.data
+                        // context.commit('setAdmin', res.data)
                         sessionStorage.setItem("admin", JSON.stringify(res.data))
-
                         //登录成功之后进行页面跳转
                         router.push("/index")
                     } else {

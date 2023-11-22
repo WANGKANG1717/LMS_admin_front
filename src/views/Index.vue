@@ -26,7 +26,7 @@ export default {
                     res.data.forEach(item => {
                         datas.push({name: item.category, value: item.count})
                     })
-                    console.log(datas)
+                    // console.log(datas)
                     this.drawEcharts(datas)
                 } else {
                     this.$message({
@@ -37,7 +37,7 @@ export default {
             })
         },
         drawEcharts(datas) {
-            console.log("123123")
+            // console.log("123123")
             // console.log(this)
             // console.log(this.$root)
             // 基于准备好的dom，初始化echarts实例

@@ -22,15 +22,15 @@ const routes = [
                     keepAlive: true, // 需要被缓存
                 }
             },
-            //     {
-            //         path: 'book',
-            //         name: 'Book',
-            //         component: () => import("@/views/Book"),
-            //         meta: {
-            //             title: '书籍管理',
-            //             keepAlive: true, // 需要被缓存
-            //         }
-            //     },
+                {
+                    path: 'book',
+                    name: 'Book',
+                    component: () => import("@/views/Book"),
+                    meta: {
+                        title: '书籍管理',
+                        keepAlive: true, // 需要被缓存
+                    }
+                },
             //     {
             //         path: 'category',
             //         name: 'Category',
@@ -103,33 +103,6 @@ const routes = [
         component: () => import("@/views/Login"),
         meta: {
             title: '登录',
-            keepAlive: true, // 需要被缓存
-        }
-    },
-    {
-        path: '/register',
-        name: 'Register',
-        component: () => import("@/views/Register"),
-        meta: {
-            title: '注册',
-            keepAlive: true, // 需要被缓存
-        }
-    },
-    {
-        path: '/m_login',
-        name: 'MLogin',
-        component: () => import("@/views/MLogin"),
-        meta: {
-            title: '登录',
-            keepAlive: true, // 需要被缓存
-        }
-    },
-    {
-        path: '/m_register',
-        name: 'MRegister',
-        component: () => import("@/views/MRegister"),
-        meta: {
-            title: '注册',
             keepAlive: true, // 需要被缓存
         }
     }

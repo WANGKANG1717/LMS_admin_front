@@ -9,21 +9,23 @@ export function adminLogin(number,password) {
     })
 }
 
-export function userRegister(username,nickName,email,password) {
+// {
+//     "number":"1234567890124",
+//     "userName":"wk12345124",
+//     "password":"1234"
+// }
+export function userRegister(formData) {
     return request({
         url: '/user/register',
         method: 'post',
-        headers: {
-            isToken :false
-        },
-        data: {"username":username,"nickName":nickName,"email":email,"password":password}
+        data: formData
     })
 }
 
 
 export function logout() {
     return request({
-        url: '/logout',
+        url: '/system/logout',
         method: 'post'
     })
 }
