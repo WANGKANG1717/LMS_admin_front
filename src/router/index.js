@@ -40,34 +40,15 @@ const routes = [
                         keepAlive: true, // 需要被缓存
                     }
                 },
-            //     {
-            //         path: 'user',
-            //         name: 'User',
-            //         component: () => import("@/views/User"),
-            //         meta: {
-            //             title: '用户管理',
-            //             keepAlive: true, // 需要被缓存
-            //         }
-            //     },
-            //     {
-            //         path: 'message',
-            //         name: 'Message',
-            //         component: () => import("@/views/Message"),
-            //         meta: {
-            //             title: '用户留言',
-            //             keepAlive: true, // 需要被缓存
-            //         }
-            //     },
-            //     {
-            //         path: 'admin',
-            //         name: 'Admin',
-            //         component: () => import("@/views/Admin"),
-            //         meta: {
-            //             role: 1,
-            //             title: '管理员管理',
-            //             keepAlive: true, // 需要被缓存
-            //         }
-            //     },
+                {
+                    path: 'user',
+                    name: 'User',
+                    component: () => import("@/views/User"),
+                    meta: {
+                        title: '用户管理',
+                        keepAlive: true, // 需要被缓存
+                    }
+                },
                 {
                     path: 'person',
                     name: 'Person',
@@ -77,15 +58,15 @@ const routes = [
                         keepAlive: true, // 需要被缓存
                     }
                 },
-            //     {
-            //         path: 'about',
-            //         name: 'About',
-            //         component: () => import("@/views/About"),
-            //         meta: {
-            //             title: '关于',
-            //             keepAlive: true, // 需要被缓存
-            //         }
-            //     },
+                {
+                    path: 'about',
+                    name: 'About',
+                    component: () => import("@/views/About"),
+                    meta: {
+                        title: '关于',
+                        keepAlive: true, // 需要被缓存
+                    }
+                },
         ]
     },
     {

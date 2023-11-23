@@ -27,15 +27,6 @@
                 <i class="el-icon-user"></i>
                 <template #title>用户管理</template>
             </el-menu-item>
-            <el-menu-item index="/message">
-                <i class="el-icon-message"></i>
-                <template #title>用户留言</template>
-            </el-menu-item>
-<!--            <el-menu-item index="/admin" v-if="this.$store.admin.type===1">-->
-            <el-menu-item index="/admin">
-                <i class="el-icon-user-solid"></i>
-                <template #title>管理员管理</template>
-            </el-menu-item>
             <el-menu-item index="/about">
                 <i class="el-icon-coffee"></i>
                 <template #title>关于</template>
