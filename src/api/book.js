@@ -55,3 +55,10 @@ export function deleteBatchBook(data) {
         data: data,
     })
 }
+
+export function getBookDetail(bookId) {
+    return request({
+        url: "system/book/get/" + bookId,
+        method: 'get',
+    })
+}

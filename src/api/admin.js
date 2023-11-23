@@ -1,4 +1,5 @@
 import request from '@/utils/request'
+import user from "@/views/User.vue";
 
 // 登录
 export function adminLogin(number,password) {
@@ -42,5 +43,12 @@ export function updateUser(data) {
         url: '/system/user',
         method: 'put',
         data: data
+    })
+}
+
+export function getUserDetail(userId) {
+    return request({
+        url: '/system/user/' + userId,
+        method: 'get',
     })
 }
