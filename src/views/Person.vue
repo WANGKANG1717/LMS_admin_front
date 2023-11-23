@@ -23,17 +23,14 @@
                 <el-form-item label="用户名" prop="userName">
                     <el-input v-model="form.userName" style="width: 80%"></el-input>
                 </el-form-item>
-                 <el-form-item label="昵称" prop="nickName">
-                    <el-input v-model="form.nickName" style="width: 80%"></el-input>
-                </el-form-item>
                 <el-form-item label="性别" prop="sex">
                     <el-input v-model="form.sex" style="width: 80%"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱" prop="email">
                     <el-input v-model="form.email" style="width: 80%"></el-input>
                 </el-form-item>
-                <el-form-item label="手机号" prop="phonenumber">
-                    <el-input v-model="form.phonenumber" style="width: 80%"></el-input>
+                <el-form-item label="手机号" prop="phone">
+                    <el-input v-model="form.phone" style="width: 80%"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
                     <el-input v-model="form.password" style="width: 80%"></el-input>
