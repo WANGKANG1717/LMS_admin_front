@@ -135,7 +135,7 @@ export default {
                                     message: "登录成功"
                                 })
                                 this.$store.commit('setToken', res.data.token)
-                                sessionStorage.setItem("token", res.data.token)
+                                // sessionStorage.setItem("token", res.data.token)
                                 // 获取当前登录的管理员的信息
                                 this.$store.dispatch("getAdminInfo")
                             } else {

@@ -31,24 +31,15 @@ const routes = [
                         keepAlive: true, // 需要被缓存
                     }
                 },
-            //     {
-            //         path: 'category',
-            //         name: 'Category',
-            //         component: () => import("@/views/Category"),
-            //         meta: {
-            //             title: '书籍分类',
-            //             keepAlive: true, // 需要被缓存
-            //         }
-            //     },
-            //     {
-            //         path: 'order',
-            //         name: 'Order',
-            //         component: () => import("@/views/Order"),
-            //         meta: {
-            //             title: '订单管理',
-            //             keepAlive: true, // 需要被缓存
-            //         }
-            //     },
+                {
+                    path: 'borrowHistory',
+                    name: 'BorrowHistory',
+                    component: () => import("@/views/BorrowHistory"),
+                    meta: {
+                        title: '预约管理',
+                        keepAlive: true, // 需要被缓存
+                    }
+                },
             //     {
             //         path: 'user',
             //         name: 'User',
@@ -77,15 +68,15 @@ const routes = [
             //             keepAlive: true, // 需要被缓存
             //         }
             //     },
-            //     {
-            //         path: 'person',
-            //         name: 'Person',
-            //         component: () => import("@/views/Person"),
-            //         meta: {
-            //             title: '个人信息',
-            //             keepAlive: true, // 需要被缓存
-            //         }
-            //     },
+                {
+                    path: 'person',
+                    name: 'Person',
+                    component: () => import("@/views/Person"),
+                    meta: {
+                        title: '个人信息',
+                        keepAlive: true, // 需要被缓存
+                    }
+                },
             //     {
             //         path: 'about',
             //         name: 'About',

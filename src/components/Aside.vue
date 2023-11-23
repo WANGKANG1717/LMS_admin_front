@@ -19,13 +19,9 @@
                 <i class="el-icon-notebook-1"></i>
                 <template #title>书籍管理</template>
             </el-menu-item>
-            <el-menu-item index="/category">
-                <i class="el-icon-menu"></i>
-                <template #title>书籍分类</template>
-            </el-menu-item>
-            <el-menu-item index="/order">
+            <el-menu-item index="/borrowHistory">
                 <i class="el-icon-s-order"></i>
-                <template #title>订单管理</template>
+                <template #title>预约管理</template>
             </el-menu-item>
             <el-menu-item index="/user">
                 <i class="el-icon-user"></i>

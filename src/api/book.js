@@ -16,3 +16,42 @@ export function bookCount() {
         method: 'get',
     })
 }
+
+export function bookList(params) {
+    return request({
+        url: '/system/book/list',
+        method: 'get',
+        params: params
+    })
+}
+
+export function updateBook(data) {
+    return request({
+        url: '/system/book/update',
+        method: 'put',
+        data: data
+    })
+}
+
+export function deleteBook(id) {
+    return request({
+        url: "/system/book/delete/" + id,
+        method: 'delete',
+    })
+}
+
+export function addBook(data) {
+    return request({
+        url: "/system/book/add",
+        method: 'post',
+        data: data,
+    })
+}
+
+export function deleteBatchBook(data) {
+    return request({
+        url: "/system/book/deleteBatch",
+        method: 'post',
+        data: data,
+    })
+}

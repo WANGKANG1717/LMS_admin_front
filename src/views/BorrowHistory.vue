@@ -3,24 +3,7 @@
     <!--    功能区域-->
     <div style="margin: 10px">
       <el-button type="primary" @click="add">新增</el-button>
-      <el-upload
-          :action="importUrl"
-          :on-success="handleUploadSuccess"
-          :show-file-list=false
-          :limit="10"
-          accept='.xlsx'
-          style="display: inline-block; margin: 0 10px"
-          v-if="admin.role===1"
-      >
-        <el-button type="primary">导入</el-button>
-      </el-upload>
-      <el-button type="primary" @click="exportOrder" v-if="admin.role===1">导出</el-button>
 
-      <el-popconfirm title="确定删除吗？" @confirm="deleteBatch" v-if="admin.role===1">
-        <template #reference>
-          <el-button type="danger">批量删除</el-button>
-        </template>
-      </el-popconfirm>
       <span style="float: right; width: 40%">
         <el-input v-model="search" placeholder="请输入订单号" style="width: 80%" clearable></el-input>
         <el-button type="primary" style="margin-left: 5px;" @click="load">查询</el-button>
@@ -219,7 +202,7 @@ export default {
       dialogVisible: false,
       form: {},
       tableData: [],
-      importUrl: "http://" + window.server.Url + ":9090/order/import",
+      importUrl: window.server.Url + "/order/import",
       ids: [],  //需要删除的id的数组
     }
   },

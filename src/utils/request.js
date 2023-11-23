@@ -42,10 +42,10 @@ request.interceptors.response.use(
             res = res ? JSON.parse(res) : res
         }
         //验证token
-        if(res.code==='401') {
-            console.log("token过期，重新登陆");
-            router.push("/login");
-        }
+        // if (res.code === 401) {
+        //     console.log("token过期，重新登陆");
+        //     router.push("/login");
+        // }
         return res;
     },
     error => {

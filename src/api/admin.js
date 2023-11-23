@@ -14,13 +14,13 @@ export function adminLogin(number,password) {
 //     "userName":"wk12345124",
 //     "password":"1234"
 // }
-export function userRegister(formData) {
-    return request({
-        url: '/user/register',
-        method: 'post',
-        data: formData
-    })
-}
+// export function userRegister(formData) {
+//     return request({
+//         url: '/user/register',
+//         method: 'post',
+//         data: formData
+//     })
+// }
 
 
 export function logout() {
@@ -37,10 +37,10 @@ export function getAdminInfo() {
     })
 }
 
-export function savaUserInfo(userinfo) {
+export function updateUser(data) {
     return request({
-        url: '/user/userInfo',
+        url: '/system/user',
         method: 'put',
-        data: userinfo
+        data: data
     })
 }

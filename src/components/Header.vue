@@ -40,21 +40,16 @@ export default {
             }
             else if (command == 'info') {
                 console.log('info')
+                this.$router.push("/person")
             }
         },
         logout() {
             logout().then(
                 res => {
-                    if (res == 200) {
-                        this.$message({
-                            type: "info",
-                            message: res.msg
-                        })
+                    if (res.code == 200) {
+                        this.$message.success(res.msg)
                     } else {
-                        this.$message({
-                            type: "error",
-                            message: res.msg
-                        })
+                        this.$message.error(res.msg)
                     }
                     sessionStorage.clear()
                     this.$router.push("/login")
