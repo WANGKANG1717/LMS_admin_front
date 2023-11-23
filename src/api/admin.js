@@ -10,20 +10,6 @@ export function adminLogin(number,password) {
     })
 }
 
-// {
-//     "number":"1234567890124",
-//     "userName":"wk12345124",
-//     "password":"1234"
-// }
-// export function userRegister(formData) {
-//     return request({
-//         url: '/user/register',
-//         method: 'post',
-//         data: formData
-//     })
-// }
-
-
 export function logout() {
     return request({
         url: '/system/logout',
@@ -50,5 +36,28 @@ export function getUserDetail(userId) {
     return request({
         url: '/system/user/' + userId,
         method: 'get',
+    })
+}
+
+export function getUserList(params) {
+    return request({
+        url: '/system/user/list',
+        method: 'get',
+        params
+    })
+}
+
+export function deleteUser(userId) {
+    return request({
+        url: '/system/user/' + userId,
+        method: 'delete',
+    })
+}
+
+export function addUser(data) {
+    return request({
+        url: '/system/user',
+        method: 'post',
+        data
     })
 }

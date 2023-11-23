@@ -117,7 +117,7 @@
                         </div>
                     </el-form-item>
                     <el-form-item label="封面">
-                        <el-upload ref="upload" :action="headpicUploadUrl" :on-success="headpicUploadSuccess">
+                        <el-upload ref="upload" :action="avatarUploadUrl" :on-success="avatarUploadSuccess">
                             <el-button type="primary">点击上传</el-button>
                         </el-upload>
                     </el-form-item>
@@ -229,7 +229,7 @@ export default {
             form: {},
             tableData: [],
             importUrl: window.server.Url + "/book/import",
-            headpicUploadUrl: window.server.Url + "/files/upload",
+            avatarUploadUrl: window.server.Url + "/files/upload",
             ids: [],  //需要删除的id的数组
         }
     },
@@ -286,8 +286,8 @@ export default {
             location.href = window.server.Url + "/book/export";
         }
         ,
-        headpicUploadSuccess(res) {
-            // console.log("headpicUploadSuccess" + res);
+        avatarUploadSuccess(res) {
+            // console.log("avatarUploadSuccess" + res);
             this.form.cover = res.data;
         }
         ,

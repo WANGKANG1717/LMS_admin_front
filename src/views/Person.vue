@@ -10,10 +10,10 @@
                 <el-form-item label="头像">
                     <el-image
                             style="width: 100px; height: 100px"
-                            :src="form.avater"
-                            :preview-src-list="[form.avater]">
+                            :src="form.avatar"
+                            :preview-src-list="[form.avatar]">
                     </el-image>
-                    <el-upload ref="upload" :action="avaterUploadUrl" :on-success="avaterUploadSuccess">
+                    <el-upload ref="upload" :action="avatarUploadUrl" :on-success="avatarUploadSuccess">
                         <el-button type="primary">点击上传</el-button>
                     </el-upload>
                 </el-form-item>
@@ -44,7 +44,7 @@
                 </el-form-item>
                 <div style="text-align: center;">
                     <el-button type="primary" @click="update" style="margin-right: 120px">保存</el-button>
-                    <el-button type="primary" @click="this.$router.push('/index')">返回</el-button>
+                    <el-button type="primary" @click="$router.back()">返回</el-button>
                 </div>
             </el-form>
         </div>
@@ -76,7 +76,7 @@ export default {
                 ],
             },
             form: {},
-            avaterUploadUrl: window.server.Url + "/files/upload",
+            avatarUploadUrl: window.server.Url + "/files/upload",
         }
     },
     created() {
@@ -86,9 +86,9 @@ export default {
         console.log(this.form)
     },
     methods: {
-        avaterUploadSuccess(res) {
-            console.log("avaterUploadSuccess" + res);
-            this.form.avater = res.data;
+        avatarUploadSuccess(res) {
+            console.log("avatarUploadSuccess" + res);
+            this.form.avatar = res.data;
         },
         update() {
             this.$refs['form'].validate((valid) => {
@@ -106,7 +106,7 @@ export default {
                             } else {
                                 this.$message.error(res.msg)
                             }
-                            this.$router.push("/");
+                            // this.$router.back()
                         }
                     )
                 } else {

@@ -1,314 +1,344 @@
 <template>
-  <div style="padding:0px 0">
-    <!--    功能区域-->
-    <div style="margin: 10px">
-      <el-button type="primary" @click="add">新增</el-button>
-      <el-upload
-          :action="importUrl"
-          :on-success="handleUploadSuccess"
-          :show-file-list=false
-          :limit="10"
-          accept='.xlsx'
-          style="display: inline-block; margin: 0 10px"
-          v-if="admin.role===1"
-      >
-        <el-button type="primary">导入</el-button>
-      </el-upload>
-      <el-button type="primary" @click="exportUser" v-if="admin.role===1">导出</el-button>
-
-      <span style="float: right; width: 40%">
-        <el-input v-model="search" placeholder="请输入关键字" style="width: 80%" clearable></el-input>
-        <el-button type="primary" style="margin-left: 5px;" @click="load">查询</el-button>
-      </span>
-    </div>
-    <!--    行区-->
-    <div style="margin: 10px">
-      <el-table :data="tableData" border stripe style="width: 99%">
-        <el-table-column prop="id" label="ID" sortable></el-table-column>
-        <el-table-column prop="name" label="用户名" sortable></el-table-column>
-        <el-table-column prop="nickname" label="昵称" sortable></el-table-column>
-        <el-table-column prop="age" label="年龄" sortable></el-table-column>
-        <el-table-column prop="sex" label="性别" sortable></el-table-column>
-        <el-table-column prop="address" label="地址" sortable></el-table-column>
-        <el-table-column label="角色">
-          <template #default="scope">
-            <span v-if="scope.row.role===0">普通用户</span>
-            <span v-if="scope.row.role===1">会员</span>
-          </template>
-        </el-table-column>
-        <el-table-column label="头像" width="122px">
-          <template #default="scope">
-            <el-image
-                style="width: 100px; height: 100px"
-                :src="scope.row.headpic"
-                :preview-src-list="[scope.row.headpic]">
-            </el-image>
-          </template>
-        </el-table-column>
-        <el-table-column label="操作" width="145px">
-          <template #default="scope">
-            <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
-            <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row.id)">
-              <template #reference>
-                <el-button size="mini" type="danger">删除</el-button>
-              </template>
-            </el-popconfirm>
-          </template>
-        </el-table-column>
-      </el-table>
-    </div>
-    <!--    分页区-->
-    <div style="margin: 10px">
-      <el-pagination
-          @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="currentPage"
-          :page-sizes="[5, 10, 20, 40]"
-          :page-size="pageSize"
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="total">
-      </el-pagination>
-    </div>
-    <!--      新增表单-->
-    <el-dialog title="提示" v-model="dialogVisible" width="30%">
-      <el-form ref="form" :model="form" label-width="120px" :rules="rules">
-        <el-form-item label="用户名" prop="name">
-          <el-input v-model="form.name" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="昵称" prop="nickname">
-          <el-input v-model="form.nickname" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="密码" prop="passwd">
-          <el-input v-model="form.passwd" style="width: 80%" show-password></el-input>
-        </el-form-item>
-        <el-form-item label="年龄" prop="age">
-          <el-input v-model.number="form.age" autocomplete="off" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="性别" prop="sex">
-          <div>
-            <el-radio v-model="form.sex" label="男">男</el-radio>
-            <el-radio v-model="form.sex" label="女">女</el-radio>
-            <el-radio v-model="form.sex" label="未知">未知</el-radio>
-          </div>
-        </el-form-item>
-        <el-form-item label="地址" prop="address">
-          <el-input v-model="form.address" style="width: 80%"></el-input>
-        </el-form-item>
-        <el-form-item label="头像">
-          <el-upload ref="upload" :action="headpicUploadUrl" :on-success="headpicUploadSuccess">
-            <el-button type="primary">点击上传</el-button>
-          </el-upload>
-        </el-form-item>
-      </el-form>
-      <template #footer>
+    <div style="padding:0px 0">
+        <!--    功能区域-->
+        <div style="margin: 10px">
+            <el-button type="primary" @click="add">新增</el-button>
+            <span style="float: right; margin-right: 20px">
+                            <el-input v-model="searchParams.userName"
+                                      style="margin-right: 10px; margin-bottom: 10px; width: 200px"
+                                      placeholder="请输入用户名"
+                                      clearable></el-input>
+                <!--                0已借出 / 1已归还 / 2过期未还 / 3已预约-->
+            <el-select v-model="searchParams.status" placeholder="请选择用户状态"
+                       style="margin-right: 10px; margin-bottom: 10px; width: 200px">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="正常" value="0"></el-option>
+                    <el-option label="已停用" value="1"></el-option>
+            </el-select>
+                <el-select v-model="searchParams.type" placeholder="请选择用户类型"
+                           style="margin-right: 10px; margin-bottom: 10px; width: 200px">
+                    <el-option label="全部" value=""></el-option>
+                    <el-option label="管理员" value="1"></el-option>
+                    <el-option label="普通用户" value="0"></el-option>
+                </el-select>
+            <el-button type="primary" style="margin-left: 5px;" @click="load">查询</el-button>
+            </span>
+        </div>
+        <!--    行区-->
+        <div style="margin: 10px">
+            <el-table :data="tableData" border stripe style="width: 99%">
+                <el-table-column prop="id" label="ID" sortable></el-table-column>
+                <el-table-column label="头像" width="122px">
+                    <template #default="scope">
+                        <el-image
+                                style="width: 100px; height: 100px"
+                                :src="scope.row.avatar"
+                                :preview-src-list="[scope.row.avatar]"
+                        >
+                        </el-image>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="number" label="学号/工号" sortable></el-table-column>
+                <el-table-column prop="userName" label="用户名" sortable></el-table-column>
+                <el-table-column prop="sex" label="性别" sortable></el-table-column>
+                <el-table-column prop="email" label="邮箱" sortable></el-table-column>
+                <el-table-column prop="phone" label="手机号" sortable></el-table-column>
+                <el-table-column prop="address" label="地址" sortable></el-table-column>
+                <el-table-column prop="status" label="状态" sortable>
+                    <template #default="scope">
+                        {{ scope.row.status | formatStatus }}
+                    </template>
+                </el-table-column>
+                <el-table-column prop="type" label="账号类型" sortable>
+                    <template #default="scope">
+                        {{ scope.row.type | formatType }}
+                    </template>
+                </el-table-column>
+                <el-table-column label="操作" width="145px">
+                    <template #default="scope">
+                        <el-button size="mini" @click="handleEdit(scope.row)">编辑</el-button>
+                        <el-popconfirm title="确定删除吗？" @confirm="handleDelete(scope.row.id)">
+                            <template #reference>
+                                <el-button size="mini" type="danger">删除</el-button>
+                            </template>
+                        </el-popconfirm>
+                    </template>
+                </el-table-column>
+            </el-table>
+        </div>
+        <!--    分页区-->
+        <div style="margin: 10px">
+            <el-pagination
+                    @size-change="handleSizeChange"
+                    @current-change="handleCurrentChange"
+                    :current-page="currentPage"
+                    :page-sizes="[5, 10, 20, 40]"
+                    :page-size="pageSize"
+                    layout="total, sizes, prev, pager, next, jumper"
+                    :total="total">
+            </el-pagination>
+        </div>
+        <!--      新增表单-->
+        <el-dialog title="提示" :visible.sync="dialogVisible" width="30%">
+            <el-form ref="form" :model="form" label-width="120px" :rules="rules">
+                <el-form-item label="学号/工号" prop="number">
+                    <el-input :disabled="number_disable" v-model="form.number" style="width: 80%"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" v-if="!number_disable" prop="password">
+                    <el-input v-model="form.password" style="width: 80%"></el-input>
+                </el-form-item>
+                <el-form-item label="用户名" prop="userName">
+                    <el-input v-model="form.userName" style="width: 80%"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱" prop="email">
+                    <el-input v-model="form.email" style="width: 80%"></el-input>
+                </el-form-item>
+                <el-form-item label="地址" prop="address">
+                    <el-input v-model="form.address" style="width: 80%"></el-input>
+                </el-form-item>
+                <el-form-item label="性别" prop="sex">
+                    <div>
+                        <el-radio v-model="form.sex" label="男">男</el-radio>
+                        <el-radio v-model="form.sex" label="女">女</el-radio>
+                    </div>
+                </el-form-item>
+                <el-form-item label="手机号" prop="phone">
+                    <el-input v-model="form.phone" style="width: 80%"></el-input>
+                </el-form-item>
+                <el-form-item label="状态" prop="status">
+                    <el-select v-model="form.status">
+                        <el-option label="停用" value="1"></el-option>
+                        <el-option label="正常" value="0"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="类型" prop="type">
+                    <el-select v-model="form.type">
+                        <el-option label="管理员" value="1"></el-option>
+                        <el-option label="普通用户" value="0"></el-option>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="头像">
+                    <el-upload ref="upload" :action="avatarUploadUrl" :on-success="avatarUploadSuccess"
+                               :on-error="avatarUploadError">
+                        <el-button type="primary">点击上传</el-button>
+                    </el-upload>
+                </el-form-item>
+            </el-form>
+            <template #footer>
         <span class="dialog-footer">
           <el-button @click="dialogVisible = false">取 消</el-button>
           <el-button type="primary" @click="submitForm()">确 定</el-button>
         </span>
-      </template>
-    </el-dialog>
-  </div>
+            </template>
+        </el-dialog>
+    </div>
 </template>
 
 <script>
 import request from "@/utils/request";
+import {addUser, deleteUser, getUserList, updateUser} from "@/api/admin";
 
 export default {
-  name: "User",
-  components: {},
-  data() {
-    return {
-      rules: {
-        name: [
-          {required: true, message: '请输入用户名', trigger: 'blur'},
-          {min: 3, max: 8, message: '长度在 3 到 8 个字符', trigger: 'blur'}
-        ],
-        nickname: [
-          {required: true, message: '请输入昵称', trigger: 'blur'},
-        ],
-        passwd: [
-          {required: true, message: '请输入密码', trigger: 'blur'},
-          {min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur'}
-        ],
-        age: [
-          {required: true, message: '请输入年龄', trigger: 'blur'},
-          {type: 'number', message: '年龄必须为数字值'}
-        ],
-        sex: [
-          {required: true, message: '请选择性别', trigger: 'blur'},
-        ],
-        address: [
-          {required: true, message: '请输入地址', trigger: 'blur'},
-        ],
-      },
-      admin: {},
-      search: '',
-      currentPage: 1,
-      pageSize: 10,
-      total: 10,
-      dialogVisible: false,
-      form: {},
-      tableData: [],
-      importUrl: "http://"+window.server.Url+":9090/user/import",
-      headpicUploadUrl: "http://"+window.server.Url+":9090/files/upload",
-    }
-  },
-  //网页一加载就调用这个方法
-  created() {
-    let adminStr = sessionStorage.getItem("admin");
-    this.admin = JSON.parse(adminStr);
-    //请求服务器，确认当前用户的合法信息
-    request.get("/admin/" + this.admin.id).then(res => {
-      if (res.code === '0') {
-        this.admin = res.data;
-      }
-    })
-    // console.log(window.server.filesUploadUrl);
-    this.load();
-  },
-  methods: {
-    submitForm() {
-      this.$refs['form'].validate((valid) => {
-        if (!valid) {
-          this.$message({
-            type: "error",
-            message: "请检查表单"
-          })
-          return false;
+    name: "User",
+    components: {},
+    filters: {
+        formatBorrowStatus(value) {
+            //    0已借出 / 1已归还 / 2过期未还 / 3已预约
+            var map = {
+                "0": '已借出',
+                "1": "已归还",
+                "2": "过期未还",
+                "3": "已预约",
+            }
+            return map[value]
+        },
+        formatStatus(value) {
+            //    0已借出 / 1已归还 / 2过期未还 / 3已预约
+            var map = {
+                "0": '正常',
+                "1": "停用",
+            }
+            return map[value]
+        },
+        formatType(value) {
+            //    0已借出 / 1已归还 / 2过期未还 / 3已预约
+            var map = {
+                "0": '普通用户',
+                "1": "管理员",
+            }
+            return map[value]
         }
-        this.save();
-      });
     },
-    handleUploadSuccess(res) {
-      if (res.code === "0") {
-        this.$message.success("导入成功");
+    data() {
+        return {
+            rules: {
+                number: [
+                    {required: true, message: '请输入工号/学号', trigger: 'blur'},
+                    {min: 10, max: 10, message: '长度在 10 个字符', trigger: 'blur'}
+                ],
+                userName: [
+                    {required: true, message: '请输入昵称', trigger: 'blur'},
+                ],
+                password: [
+                    {required: true, message: '请输入密码', trigger: 'blur'},
+                    {min: 6, max: 12, message: '长度在 6 到 12 个字符', trigger: 'blur'}
+                ],
+                age: [
+                    {required: true, message: '请输入年龄', trigger: 'blur'},
+                    {type: 'number', message: '年龄必须为数字值'}
+                ],
+                sex: [
+                    {required: true, message: '请选择性别', trigger: 'blur'},
+                ],
+                address: [
+                    {required: false, message: '请输入地址', trigger: 'blur'},
+                ],
+                email: [
+                    {
+                        pattern: /^([a-zA-Z]|[0-9])(\w|\-)+@[a-zA-Z0-9]+\.([a-zA-Z]{2,4})$/,
+                        message: '请输入检查邮箱格式',
+                        trigger: 'blur'
+                    }
+                ],
+            },
+            admin: {},
+            search: '',
+            currentPage: 1,
+            pageSize: 10,
+            total: 10,
+            dialogVisible: false,
+            form: {},
+            tableData: [],
+            searchParams: {},
+            avatarUploadUrl: window.server.Url + "/files/upload",
+            number_disable: true
+        }
+    },
+    //网页一加载就调用这个方法
+    created() {
+        this.admin = this.$store.getters.admin
+        // console.log(window.server.filesUploadUrl);
         this.load();
-      } else {
-        this.$message.error("导入失败");
-      }
     },
-    exportUser() {
-      location.href = "http://"+window.server.Url+":9090/user/export";
-    },
-    headpicUploadSuccess(res) {
-      console.log("headpicUploadSuccess" + res);
-      this.form.headpic = res.data;
-    },
-    load() {
-      request.get("/user", {
-        params: {
-          pageNum: this.currentPage,
-          pageSize: this.pageSize,
-          search: this.search,
-        }
-      }).then(
-          res => {
-            // console.log(res);
-            this.tableData = res.data.records;
-            this.total = res.data.total;
-          }
-      )
-    },
-    //添加按钮
-    add() {
-      this.dialogVisible = true;
-      this.form = {};
-      this.$nextTick(() => {
-        if (this.$refs["upload"]) {
-          this.$refs["upload"].clearFiles();
-        }
-      });
-      this.$nextTick(()=>{
-        this.$refs['form'].clearValidate() // 只清除清除验证
-      });
-    },
-    //保存&更新
-    save() {
-      if (this.form.id) {
-        request.put("/user", this.form).then(
-            res => {
-              console.log(res);
-              if (res.code === '0') {
-                this.$message({
-                  type: "success",
-                  message: "更新成功"
-                })
-              } else {
-                this.$message({
-                  type: "error",
-                  message: res.msg
-                })
-              }
-              //刷新数据，并关闭弹窗
-              this.load();
-              this.dialogVisible = false;
+    methods: {
+        submitForm() {
+            this.$refs['form'].validate((valid) => {
+                if (!valid) {
+                    this.$message({
+                        type: "error",
+                        message: "请检查表单"
+                    })
+                    return false;
+                }
+                this.save();
+            });
+        },
+        avatarUploadSuccess(res) {
+            console.log("avatarUploadSuccess" + res);
+            this.form.avatar = res.data;
+            this.$message.success("上传成功")
+        },
+        avatarUploadError(res) {
+            this.$message.error("上传失败，请见文件大小和格式（小于2M）")
+        },
+        load() {
+            var params = {
+                pageNum: this.currentPage,
+                pageSize: this.pageSize,
+                ...this.searchParams
             }
-        )
-      } else {
-        request.post("/user", this.form).then(
-            res => {
-              console.log(res);
-              if (res.code === '0') {
-                this.$message({
-                  type: "success",
-                  message: "新增成功"
-                })
-              } else {
-                this.$message({
-                  type: "error",
-                  message: res.msg
-                })
-              }
-              this.load();
-              this.dialogVisible = false;
-            }
-        )
-      }
-    },
-    handleDelete(id) {
-      console.log(id);
-      request.delete("/user/" + id).then(
-          res => {
-            // console.log(res);
-            if (res.code === '0') {
-              this.$message({
-                type: "success",
-                message: "删除成功"
-              })
+            getUserList(params).then(
+                res => {
+                    if (res.code === 200) {
+                        // console.log(res);
+                        this.tableData = res.data.rows;
+                        this.total = parseInt(res.data.total);
+                    } else {
+                        this.$message.error(res.msg)
+                    }
+                }
+            )
+        },
+        //添加按钮
+        add() {
+            this.dialogVisible = true;
+            this.number_disable = false;
+            this.form = {};
+            this.$nextTick(() => {
+                if (this.$refs["upload"]) {
+                    this.$refs["upload"].clearFiles();
+                }
+                this.$refs['form'].clearValidate() // 只清除清除验证
+            });
+        },
+        //保存&更新
+        save() {
+            if (this.form.id) {
+                updateUser(this.form).then(
+                    res => {
+                        console.log(res);
+                        if (res.code === 200) {
+                            this.$message.success(res.msg)
+                        } else {
+                            this.$message.error(res.msg)
+                        }
+                        //刷新数据，并关闭弹窗
+                        this.load();
+                        this.dialogVisible = false;
+                    }
+                )
             } else {
-              this.$message({
-                type: "error",
-                message: res.msg
-              })
+                addUser(this.form).then(
+                    res => {
+                        console.log(res);
+                        if (res.code === 200) {
+                            this.$message.success(res.msg)
+                        } else {
+                            this.$message.error(res.msg)
+                        }
+                        this.load();
+                        this.dialogVisible = false;
+                    }
+                )
             }
+        },
+        handleDelete(id) {
+            console.log(id);
+            deleteUser( id).then(
+                res => {
+                    // console.log(res);
+                    if (res.code === 200) {
+                        this.$message.success(res.msg)
+                    } else {
+                        this.$message.error(res.msg)
+                    }
+                    this.load();
+                }
+            )
+        },
+        //编辑
+        handleEdit(row) {
+            //深拷贝，避免浅拷贝问题
+            this.form = JSON.parse(JSON.stringify(row));
+            this.dialogVisible = true;
+            this.number_disable = true
+            //这是一个处理未来元素的方法
+            //处理可能因为点击按钮和弹窗是异步加载导致读取不到元素的情况
+            this.$nextTick(() => {
+                if (this.$refs["upload"]) {
+                    this.$refs["upload"].clearFiles();
+                }
+                this.$refs['form'].clearValidate() // 只清除清除验证
+            })
+        },
+        handleSizeChange(pageSize) {
+            this.pageSize = pageSize;
             this.load();
-          }
-      )
-    },
-    //编辑
-    handleEdit(row) {
-      //深拷贝，避免浅拷贝问题
-      this.form = JSON.parse(JSON.stringify(row));
-      this.dialogVisible = true;
-      //这是一个处理未来元素的方法
-      //处理可能因为点击按钮和弹窗是异步加载导致读取不到元素的情况
-      this.$nextTick(() => {
-        if (this.$refs["upload"]) {
-          this.$refs["upload"].clearFiles();
-        }
-      })
-      this.$nextTick(()=>{
-        this.$refs['form'].clearValidate() // 只清除清除验证
-      });
-    },
-    handleSizeChange(pageSize) {
-      this.pageSize = pageSize;
-      this.load();
-    },
-    handleCurrentChange(pageNum) {
-      this.currentPage = pageNum;
-      this.load();
-    },
-  }
+        },
+        handleCurrentChange(pageNum) {
+            this.currentPage = pageNum;
+            this.load();
+        },
+    }
 }
 </script>

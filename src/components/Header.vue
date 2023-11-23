@@ -5,9 +5,9 @@
         <div style="width: 100px">
             <el-dropdown @command="handleCommand">
                 <span class="el-dropdown-link">
-                  <el-avatar :size="30" :src="admin.headpic" style="position: relative; top: 10px"
+                  <el-avatar :size="30" :src="admin.avatar" style="position: relative; top: 10px"
                              align="center"></el-avatar>
-                  {{ admin.name }}
+                  {{ admin.userName }}
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -37,10 +37,11 @@ export default {
         handleCommand(command) {
             if (command == 'logout') {
                 this.logout()
-            }
-            else if (command == 'info') {
+            } else if (command == 'info') {
                 console.log('info')
-                this.$router.push("/person")
+                if (this.$route.path != "/person") {
+                    this.$router.push("/person")
+                }
             }
         },
         logout() {
