@@ -46,6 +46,11 @@ export default new Vuex.Store({
                             message: res.msg
                         })
                     }
+                },
+                err => {
+                    this.loading = false;
+                    this.$message.error(err.message)
+                    console.log(err.message);
                 }
             )
         }

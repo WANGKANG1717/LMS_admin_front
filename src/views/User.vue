@@ -26,7 +26,11 @@
         </div>
         <!--    行区-->
         <div style="margin: 10px">
-            <el-table :data="tableData" border stripe style="width: 99%">
+            <el-table :data="tableData" border stripe style="width: 99%"
+                      v-loading.fullscreen.lock="loading"
+                      element-loading-text="正在处理..."
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(0, 0, 0, 0.8)">
                 <el-table-column prop="id" label="ID" sortable></el-table-column>
                 <el-table-column label="头像" width="122px">
                     <template #default="scope">
@@ -200,6 +204,13 @@ export default {
                         trigger: 'blur'
                     }
                 ],
+                phone: [
+                    {
+                        pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,
+                        message: '请输入正确的手机号',
+                        trigger: 'blur'
+                    },
+                ],
             },
             admin: {},
             search: '',
@@ -211,7 +222,8 @@ export default {
             tableData: [],
             searchParams: {},
             avatarUploadUrl: window.server.Url + "/files/upload",
-            number_disable: true
+            number_disable: true,
+            loading: false,
         }
     },
     //网页一加载就调用这个方法
@@ -242,6 +254,7 @@ export default {
             this.$message.error("上传失败，请见文件大小和格式（小于2M）")
         },
         load() {
+            this.loading = true
             var params = {
                 pageNum: this.currentPage,
                 pageSize: this.pageSize,
@@ -256,6 +269,12 @@ export default {
                     } else {
                         this.$message.error(res.msg)
                     }
+                    this.loading = false;
+                },
+                err => {
+                    this.loading = false;
+                    this.$message.error(err.message)
+                    console.log(err.message);
                 }
             )
         },
@@ -274,6 +293,7 @@ export default {
         //保存&更新
         save() {
             if (this.form.id) {
+                this.loading = true
                 updateUser(this.form).then(
                     res => {
                         console.log(res);
@@ -285,9 +305,16 @@ export default {
                         //刷新数据，并关闭弹窗
                         this.load();
                         this.dialogVisible = false;
+                        this.loading = false;
+                    },
+                    err => {
+                        this.loading = false;
+                        this.$message.error(err.message)
+                        console.log(err.message);
                     }
                 )
             } else {
+                this.loading = true
                 addUser(this.form).then(
                     res => {
                         console.log(res);
@@ -298,13 +325,20 @@ export default {
                         }
                         this.load();
                         this.dialogVisible = false;
+                        this.loading = false;
+                    },
+                    err => {
+                        this.loading = false;
+                        this.$message.error(err.message)
+                        console.log(err.message);
                     }
                 )
             }
         },
         handleDelete(id) {
             console.log(id);
-            deleteUser( id).then(
+            this.loading = true
+            deleteUser(id).then(
                 res => {
                     // console.log(res);
                     if (res.code === 200) {
@@ -313,6 +347,11 @@ export default {
                         this.$message.error(res.msg)
                     }
                     this.load();
+                },
+                err => {
+                    this.loading = false;
+                    this.$message.error(err.message)
+                    console.log(err.message);
                 }
             )
         },

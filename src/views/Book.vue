@@ -3,17 +3,17 @@
         <!--    功能区域-->
         <div style="margin: 10px">
             <el-button type="primary" @click="add">新增</el-button>
-            <el-upload
-                    :action="importUrl"
-                    :on-success="handleUploadSuccess"
-                    :show-file-list=false
-                    :limit="10"
-                    accept='.xlsx'
-                    style="display: inline-block; margin: 0 10px"
-            >
-                <el-button type="primary">导入</el-button>
-            </el-upload>
-            <el-button type="primary" @click="exportBook">导出</el-button>
+            <!--            <el-upload-->
+            <!--                    :action="importUrl"-->
+            <!--                    :on-success="handleUploadSuccess"-->
+            <!--                    :show-file-list=false-->
+            <!--                    :limit="10"-->
+            <!--                    accept='.xlsx'-->
+            <!--                    style="display: inline-block; margin: 0 10px"-->
+            <!--            >-->
+            <!--                <el-button type="primary">导入</el-button>-->
+            <!--            </el-upload>-->
+            <!--            <el-button type="primary" @click="exportBook">导出</el-button>-->
 
             <el-popconfirm title="确定删除吗？" style="margin-left: 10px" @confirm="deleteBatch">
                 <template #reference>
@@ -44,7 +44,11 @@
         </div>
         <!--    行区-->
         <div style="margin: 10px">
-            <el-table :data="tableData" border stripe style="width: 99%" @selection-change="handleSelectionChange">
+            <el-table :data="tableData" border stripe style="width: 99%" @selection-change="handleSelectionChange"
+                      v-loading.fullscreen.lock="loading"
+                      element-loading-text="正在处理..."
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(0, 0, 0, 0.8)">
                 <el-table-column type="selection" width="40"></el-table-column>
                 <el-table-column prop="id" label="ID" sortable></el-table-column>
                 <el-table-column prop="bookName" label="名称" sortable></el-table-column>
@@ -231,6 +235,7 @@ export default {
             importUrl: window.server.Url + "/book/import",
             avatarUploadUrl: window.server.Url + "/files/upload",
             ids: [],  //需要删除的id的数组
+            loading: false,
         }
     },
     //网页一加载就调用这个方法
@@ -258,33 +263,41 @@ export default {
                 this.$message.warning("请选择数据！");
                 return;
             }
+            this.loading=true
             //一次性将ids数组中的id发送到后台
-            deleteBatchBook(this.ids).then(res => {
-                if (res.code === 200) {
-                    this.$message.success("批量删除成功！");
-                    this.load();
-                } else {
-                    this.$message.error(res.msg);
-                }
-            })
+            deleteBatchBook(this.ids).then(
+                res => {
+                    if (res.code === 200) {
+                        this.$message.success("批量删除成功！");
+                        this.load();
+                    } else {
+                        this.$message.error(res.msg);
+                    }
+                    this.loading = false;
+                },
+                err => {
+                    this.loading = false;
+                    this.$message.error(err.message)
+                    console.log(err.message);
+                })
         }
         ,
         handleSelectionChange(val) {
             this.ids = val.map(v => v.id);      //只将id存到ids数组中
         }
-        ,
-        handleUploadSuccess(res) {
-            if (res.code === "0") {
-                this.$message.success("导入成功");
-                this.load();
-            } else {
-                this.$message.error("导入失败");
-            }
-        }
-        ,
-        exportBook() {
-            location.href = window.server.Url + "/book/export";
-        }
+        // ,
+        // handleUploadSuccess(res) {
+        //     if (res.code === "0") {
+        //         this.$message.success("导入成功");
+        //         this.load();
+        //     } else {
+        //         this.$message.error("导入失败");
+        //     }
+        // }
+        // ,
+        // exportBook() {
+        //     location.href = window.server.Url + "/book/export";
+        // }
         ,
         avatarUploadSuccess(res) {
             // console.log("avatarUploadSuccess" + res);
@@ -298,16 +311,22 @@ export default {
                 ...this.searchParams
             }
             console.log(params)
+            this.loading = true
             bookList(params).then(
                 res => {
                     console.log("load" + res);
-                    if (res.code == 200) {
+                    if (res.code === 200) {
                         this.tableData = res.data.rows;
                         this.total = parseInt(res.data.total);
-                    }
-                    else {
+                    } else {
                         this.$message.error(res.msg);
                     }
+                    this.loading = false
+                },
+                err => {
+                    this.loading = false;
+                    this.$message.error(err.message)
+                    console.log(err.message);
                 }
             )
             // console.log(this.tableData);
@@ -330,6 +349,7 @@ export default {
         //保存&更新
         save() {
             if (this.form.id) {
+                this.loading = true
                 updateBook(this.form).then(
                     res => {
                         console.log("update" + res);
@@ -347,9 +367,15 @@ export default {
                         //刷新数据，并关闭弹窗
                         this.load();
                         this.dialogVisible = false;
+                    },
+                    err => {
+                        this.loading = false;
+                        this.$message.error(err.message)
+                        console.log(err.message);
                     }
                 )
             } else {
+                this.loading = true
                 addBook(this.form).then(
                     res => {
                         console.log("add" + res);
@@ -366,6 +392,11 @@ export default {
                         }
                         this.load();
                         this.dialogVisible = false;
+                    },
+                    err => {
+                        this.loading = false;
+                        this.$message.error(err.message)
+                        console.log(err.message);
                     }
                 )
             }
@@ -373,6 +404,7 @@ export default {
         ,
         handleDelete(id) {
             console.log(id);
+            this.loading = true
             deleteBook(id).then(
                 res => {
                     console.log("delete" + res);
@@ -388,6 +420,11 @@ export default {
                         })
                     }
                     this.load();
+                },
+                err => {
+                    this.loading = false;
+                    this.$message.error(err.message)
+                    console.log(err.message);
                 }
             )
         }
