@@ -135,8 +135,8 @@
                         <template #default="scope">
                             <el-image
                                     style="width: 100px; height: 100px"
-                                    :src="scope.row.avater"
-                                    :preview-src-list="[scope.row.avater]"
+                                    :src="scope.row.avatar"
+                                    :preview-src-list="[scope.row.avatar]"
                             >
                             </el-image>
                         </template>

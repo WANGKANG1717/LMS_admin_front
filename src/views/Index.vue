@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import request from "@/utils/request";
 import {bookCount} from "@/api/book";
 
 export default {
@@ -15,26 +14,32 @@ export default {
     data() {
         return {}
     },
-    mounted () {
+    mounted() {
         this.getBookData();
     },
     methods: {
         getBookData() {
-            bookCount().then(res => {
-                if (res.code == 200) {
-                    var datas = []
-                    res.data.forEach(item => {
-                        datas.push({name: item.category, value: item.count})
-                    })
-                    // console.log(datas)
-                    this.drawEcharts(datas)
-                } else {
-                    this.$message({
-                        type: "error",
-                        message: res.msg
-                    })
+            bookCount().then(
+                res => {
+                    if (res.code == 200) {
+                        var datas = []
+                        res.data.forEach(item => {
+                            datas.push({name: item.category, value: item.count})
+                        })
+                        // console.log(datas)
+                        this.drawEcharts(datas)
+                    } else {
+                        this.$message({
+                            type: "error",
+                            message: res.msg
+                        })
+                    }
+                },
+                err => {
+                    this.$message.error(err.message)
+                    console.log(err.message);
                 }
-            })
+            )
         },
         drawEcharts(datas) {
             // console.log("123123")

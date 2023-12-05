@@ -251,6 +251,7 @@ export default {
             this.$message.success("上传成功")
         },
         avatarUploadError(res) {
+            console.log(res)
             this.$message.error("上传失败，请见文件大小和格式（小于2M）")
         },
         load() {

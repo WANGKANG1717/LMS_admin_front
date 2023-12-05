@@ -7,7 +7,7 @@
                 <span class="el-dropdown-link">
                   <el-avatar :size="30" :src="admin.avatar" style="position: relative; top: 10px"
                              align="center"></el-avatar>
-<!--                  {{ admin.userName }}-->
+                    <!--                  {{ admin.userName }}-->
                   <i class="el-icon-arrow-down el-icon--right"></i>
                 </span>
                 <el-dropdown-menu slot="dropdown">
@@ -54,6 +54,10 @@ export default {
                     }
                     sessionStorage.clear()
                     this.$router.push("/login")
+                },
+                err => {
+                    this.$message.error(err.message)
+                    console.log(err.message);
                 }
             )
         },

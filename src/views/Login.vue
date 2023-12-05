@@ -23,9 +23,9 @@
                         <el-form-item>
                             <el-button style="width: 100%" type="primary" @click="login">登 录</el-button>
                         </el-form-item>
-<!--                        <el-form-item>-->
-<!--                            <el-button type="text" @click="$router.push('/register')">前往注册 >></el-button>-->
-<!--                        </el-form-item>-->
+                        <!--                        <el-form-item>-->
+                        <!--                            <el-button type="text" @click="$router.push('/register')">前往注册 >></el-button>-->
+                        <!--                        </el-form-item>-->
                     </el-form>
                 </div>
             </div>
@@ -39,10 +39,8 @@
 </template>
 
 <script>
-import request from "@/utils/request";
 import ValidCode from "@/components/ValidCode";
-import {adminLogin, getAdminInfo} from "@/api/admin";
-import {mapMutations} from "vuex";
+import {adminLogin} from "@/api/admin";
 
 export default {
     name: "Login",
@@ -52,7 +50,9 @@ export default {
     data() {
         return {
             fixStyle: '',
-            form: {},
+            form: {
+                validCode: '',
+            },
             rules: {
                 number: [
                     {required: true, message: '请输入工号', trigger: 'blur'},
@@ -61,14 +61,7 @@ export default {
                     {required: true, message: '请输入密码', trigger: 'blur'},
                 ],
             },
-            validCode: '',
-        }
-    },
-    created() {
-        if (this._isMobile()) {
-            console.log("mobile");
-            this.$router.push('/m_login');
-            return;
+            validCode:'',
         }
     },
     mounted() {
@@ -79,10 +72,6 @@ export default {
         }
     },
     methods: {
-        _isMobile() {
-            let flag = navigator.userAgent.match(/(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i);
-            return flag;
-        },
         getSize() {
             const windowWidth = document.documentElement.clientWidth;
             const windowHeight = document.documentElement.clientHeight;
@@ -111,7 +100,8 @@ export default {
         },
         // 接收验证码组件提交的 4位验证码
         createValidCode(data) {
-            this.validCode = data;
+            // console.log(data)
+            this.validCode = data
             this.form.validCode = data
         },
         login() {
@@ -144,6 +134,10 @@ export default {
                                     message: res.msg
                                 })
                             }
+                        },
+                        err => {
+                            this.$message.error(err.message)
+                            console.log(err.message);
                         }
                     )
                 } else {
